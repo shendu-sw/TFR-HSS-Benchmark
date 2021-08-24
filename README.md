@@ -17,19 +17,16 @@ This project provides the implementation of the paper "TFRD: A Benchmark Dataset
 pip install -r requirements.txt
 ```
 
-Others should note that 
-`torch-cluster`,
-`torch-scatter`,
-`torch-sparse` package are also required for implementation of GCNs. The installation of the three packages should follow the version of `torch`, `cuda` ([download](https://pytorch-geometric.com/whl/torch-1.5.0.html)). 
+`torch-cluster`, `torch-scatter`, `torch-sparse` package are also required for implementation of GCNs. The installation of the three packages should follow the version of `torch`, `cuda` [[download](https://pytorch-geometric.com/whl/torch-1.5.0.html)]. 
 
 ## Running
-> All the methods for TFR-HSS task can be accessed by ruuning `main.py` file
+> All the methods for TFR-HSS task can be accessed by running `main.py` file
+
+* The data root is put in `data_root` in configuration file `config/config.yml` .
 
 ### Image-based and Vector-based methods
 
 > The image-based and vector-based methods are following the same command.
-
-- The data root is put in `data_root` in configuration file `config/config.yml` .
 
 - Training
 
@@ -87,12 +84,13 @@ Others should note that
 
 > Only testing is permitted for point-based methods. 
 
-- Running Command
+- Testing
   ```
   python main.py
   ```
 
-  if you want to plot the reconstruction result, you can use the following command
+
+* Testing with reconstruction visualization
 
   ```
   python main.py --plot
@@ -101,16 +99,21 @@ Others should note that
 ## Project architecture
 
 - `config`: the configuration file
-  - `data.yml` describes the setups of the layout domain and heat sources
-  - `config.yml` describes other configurations
-- `samples`: tiny examples
+  - `config.yml` describes configurations
+    - `model_name`: model for reconstruction
+    - `backbone`: backbone network, used only for deep surrogate models
+    - `data_root`: root path of data
+    - `train_list`: train samples
+    - `test_list`: test samples
+    - others
+- `samples`: examples
 - `outputs`: the output results by `test` and `plot` module. The test results is saved at `outputs/*.csv` and the plotting figures is saved at `outputs/predict_plot/`.
 - `src`: including surrogate model, training and testing files.
   - `test.py`: testing files.
   - `train.py`: training files.
   - `plot.py`: prediction visualization files.
-  - `point.py`: Model and testing files for point-based methods
-  - `DeepRegression.py`: Model configurations.
+  - `point.py`: Model and testing files for point-based methods.
+  - `DeepRegression.py`: Model configurations for image-based and vector-based methods.
   - `data`: data preprocessing and data loading files.
   - `models`: interpolation and machine learning models for the TFR-HSS task.
   - `utils`: useful tool function files.
