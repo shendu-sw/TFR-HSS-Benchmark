@@ -95,7 +95,7 @@
 * `F`: The component information, including the power density, position and shape
 * `u`: Real temperature field of the specific `F` in `200*200` discretized matrix
 * `u_obs`: Temperature value of the monitoring points
-* u_pos: Positions of monitoring points in `200*200` discretized matrix (1 describes area monitoring points and 0 without monitoring points)
+* `u_pos`: Positions of monitoring points in `200*200` discretized matrix (1 describes area monitoring points and 0 without monitoring points)
 * `xs`, `ys`, `zs`: Corresponding coordinates of the `200*200` discretized matrix
 
 ## Examples
