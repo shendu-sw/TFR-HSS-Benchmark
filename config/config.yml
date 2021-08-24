@@ -1,0 +1,46 @@
+# config
+
+# model
+#####################################image-based methods########################################
+## support SegNet_AlexNet, SegNet_VGG, SegNet_ResNet18, SegNet_ResNet34, SegNet_ResNet50, SegNet_ResNet101, SegNet_ResNet152
+## FPN_ResNet18, FPN_ResNet50, FPN_ResNet101, FPN_ResNet34, FPN_ResNet152
+## FCN_AlexNet, FCN_VGG, FCN_ResNet18, FCN_ResNet50, FCN_ResNet101, FCN_ResNet34, FCN_ResNet152
+## UNet_VGG
+#####################################vector-based methods########################################
+## MLP, DenseDeepGCN, ConditionalNeuralProcess, TransformerRecon
+#####################################point-based methods########################################
+## MLPP, RSVR, RBM, RandomForest, Polynomial, Kriging, KInterpolation, GInterpolation
+model_name: ConditionalNeuralProcess  # choose from FPN, FCN, SegNet, UNet, MLP, DenseDeepGCN, 
+# TransformerRecon, ConditionalNeuralProcess, MLPP, RSVR, RBM, RandomForest, Polynomial, Kriging, KInterpolation, GInterpolation
+backbone: VGG # choose from AlexNet, VGG, ResNet18, ResNet50, ResNet101
+
+# dataset path
+data_root: samples/ADlet/
+
+# train/val set
+train_list: train/train_val.txt
+
+# test set
+## choose the test set: test_0.txt, test_1.txt, test_2.txt, test_3.txt,test_4.txt,test_5.txt,test_6.txt
+test_list: test/test_4.txt
+
+# dataset format: mat or h5
+data_format: mat
+batch_size: 5
+max_epochs: 50
+lr: 0.0005
+
+# which gpu to use
+gpu: 1 # 0 cpu, 1 gpu:0, 2 gpu:1
+val_check_interval: 1.0
+
+# num_workers in dataloader
+num_workers: 4
+
+# preprocessing of data
+## input
+mean_layout: 298
+std_layout: 50
+## output
+mean_heat: 298
+std_heat: 50
