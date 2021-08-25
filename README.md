@@ -20,7 +20,23 @@ This project provides the implementation of the paper "TFRD: A Benchmark Dataset
 pip install -r requirements.txt
 ```
 
-2. Install `torch-cluster`, `torch-scatter`, `torch-sparse` package (matching the version of `torch`, `cuda` [[download](https://pytorch-geometric.com/whl)])
+2. Install `torch-cluster`, `torch-scatter`, `torch-sparse` package (matching the version of `torch`, `cuda`)
+
+   * Automatic installation [[install instruction](https://github.com/rusty1s/pytorch_geometric#pip-wheels)]
+
+     ```
+     pip install torch-scatter -f https://pytorch-geometric.com/whl/torch-${version}+${CUDA}.html
+     pip install torch-sparse -f https://pytorch-geometric.com/whl/torch-${version}+${CUDA}.html
+     pip install torch-geometric
+     pip install torch-cluster -f https://pytorch-geometric.com/whl/torch-${version}+${CUDA}.html
+     pip install torch-spline-conv -f https://pytorch-geometric.com/whl/torch-${version}+${CUDA}.html
+     ```
+
+     `$version` describes the  `torch` version and should be replaced by `1.4.0`,`1.5.0`,`1.6.0`,`1.7.0`, `1.8.0`,`1.9.0`,`1.7.1`,`1.8.1`.
+
+     `$CUDA` should be replaced by `cpu`, `cu101`, `cu102`, `cu111`, `cu92`.
+
+   - Manual installation [[download](https://pytorch-geometric.com/whl)]
 
 ## Running
 > All the methods for TFR-HSS task can be accessed by running `main.py` file.
