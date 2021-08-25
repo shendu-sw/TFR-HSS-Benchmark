@@ -1,6 +1,6 @@
 # Temperature field reconstruction implementation package
 ## Introduction
-This project provides the implementation of the paper "TFRD: A Benchmark Dataset for Research on Temperature Field Reconstruction of Heat-Source Systems". [[paper](https://arxiv.org/abs/2108.08298)]
+This project provides the implementation of the paper "TFRD: A Benchmark Dataset for Research on Temperature Field Reconstruction of Heat-Source Systems". [[paper](https://arxiv.org/abs/2108.08298)] [[data generator](https://github.com/shendu-sw/recon-data-generator)]
 
 ## Requirements
 
