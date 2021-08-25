@@ -9,32 +9,32 @@ from .utils.data_util import get_atom_feature_dims, get_bond_feature_dims
 def act_layer(act_type, inplace=False, neg_slope=0.2, n_prelu=1):
     # activation layer
     act = act_type.lower()
-    if act == 'relu':
+    if act == "relu":
         layer = nn.ReLU(inplace)
-    elif act == 'leakyrelu':
+    elif act == "leakyrelu":
         layer = nn.LeakyReLU(neg_slope, inplace)
-    elif act == 'prelu':
+    elif act == "prelu":
         layer = nn.PReLU(num_parameters=n_prelu, init=neg_slope)
-    elif act == 'sigmoid':
-        layer= nn.Sigmoid()
+    elif act == "sigmoid":
+        layer = nn.Sigmoid()
     else:
-        raise NotImplementedError('activation layer [%s] is not found' % act)
+        raise NotImplementedError("activation layer [%s] is not found" % act)
     return layer
 
 
 def norm_layer(norm_type, nc):
     # normalization layer 1d
     norm = norm_type.lower()
-    if norm == 'batch':
+    if norm == "batch":
         layer = nn.BatchNorm1d(nc, affine=True, track_running_stats=False)
-    elif norm == 'layer':
+    elif norm == "layer":
         layer = nn.LayerNorm(nc, elementwise_affine=True)
-    elif norm == 'instance':
+    elif norm == "instance":
         layer = nn.InstanceNorm1d(nc, affine=False)
-    elif norm == 'group':
+    elif norm == "group":
         layer = nn.GroupNorm(32, nc, affine=True)
     else:
-        raise NotImplementedError('normalization layer [%s] is not found' % norm)
+        raise NotImplementedError("normalization layer [%s] is not found" % norm)
     return layer
 
 
@@ -52,9 +52,9 @@ class MultiSeq(Seq):
 
 
 class MLP(Seq):
-    def __init__(self, channels, act='relu',
-                 norm=None, bias=True,
-                 drop=0., last_lin=False):
+    def __init__(
+        self, channels, act="relu", norm=None, bias=True, drop=0.0, last_lin=False
+    ):
         m = []
 
         for i in range(1, len(channels)):
@@ -64,9 +64,9 @@ class MLP(Seq):
             if (i == len(channels) - 1) and last_lin:
                 pass
             else:
-                if norm is not None and norm.lower() != 'none':
+                if norm is not None and norm.lower() != "none":
                     m.append(norm_layer(norm, channels[i]))
-                if act is not None and act.lower() != 'none':
+                if act is not None and act.lower() != "none":
                     m.append(act_layer(act))
                 if drop > 0:
                     m.append(nn.Dropout2d(drop))
@@ -76,7 +76,6 @@ class MLP(Seq):
 
 
 class AtomEncoder(nn.Module):
-
     def __init__(self, emb_dim):
         super(AtomEncoder, self).__init__()
 
@@ -97,7 +96,6 @@ class AtomEncoder(nn.Module):
 
 
 class BondEncoder(nn.Module):
-
     def __init__(self, emb_dim):
         super(BondEncoder, self).__init__()
 
@@ -115,5 +113,3 @@ class BondEncoder(nn.Module):
             bond_embedding += self.bond_embedding_list[i](edge_attr[:, i])
 
         return bond_embedding
-
-

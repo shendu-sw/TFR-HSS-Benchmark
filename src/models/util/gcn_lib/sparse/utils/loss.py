@@ -14,11 +14,13 @@ class SmoothCrossEntropy(torch.nn.Module):
         if self.smoothing:
             n_class = pred.size(1)
             one_hot = torch.zeros_like(pred).scatter(1, gt.view(-1, 1), 1)
-            one_hot = one_hot * (1 - self.eps) + (1 - one_hot) * self.eps / (n_class - 1)
+            one_hot = one_hot * (1 - self.eps) + (1 - one_hot) * self.eps / (
+                n_class - 1
+            )
             log_prb = F.log_softmax(pred, dim=1)
 
             loss = -(one_hot * log_prb).sum(dim=1).mean()
         else:
-            loss = F.cross_entropy(pred, gt, reduction='mean')
+            loss = F.cross_entropy(pred, gt, reduction="mean")
 
         return loss

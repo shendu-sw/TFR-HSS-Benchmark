@@ -10,13 +10,14 @@ def weights_init(m):
     """
     class_name = m.__class__.__name__
     if class_name.find("Conv") != -1:
-        torch.nn.init.kaiming_normal_(m.weight,
-                                      mode="fan_out",
-                                      nonlinearity="relu")  # 初始化卷积层权重
+        torch.nn.init.kaiming_normal_(
+            m.weight, mode="fan_out", nonlinearity="relu"
+        )  # 初始化卷积层权重
         # torch.nn.init.xavier_normal_(m.weight)
-    elif (class_name.find("BatchNorm") != -1
-          and class_name.find("WithFixedBatchNorm") == -1
-          ):  # batch norm层不能用kaiming_normal初始化
+    elif (
+        class_name.find("BatchNorm") != -1
+        and class_name.find("WithFixedBatchNorm") == -1
+    ):  # batch norm层不能用kaiming_normal初始化
         torch.nn.init.constant_(m.weight, 1)
         torch.nn.init.constant_(m.bias, 0)
         # m.weight.data.normal_(1.0, 0.02)
@@ -45,9 +46,10 @@ def weights_init_without_kaiming(m):
     if class_name.find("Conv") != -1:
         torch.nn.init.xavier_normal_(m.weight)
         # torch.nn.init.normal_(m.weight)  # 初始化卷积层权重
-    elif (class_name.find("BatchNorm") != -1
-          and class_name.find("WithFixedBatchNorm") == -1
-          ):  # batch norm层不能用kaiming_normal初始化
+    elif (
+        class_name.find("BatchNorm") != -1
+        and class_name.find("WithFixedBatchNorm") == -1
+    ):  # batch norm层不能用kaiming_normal初始化
         torch.nn.init.constant_(m.weight, 1)
         torch.nn.init.constant_(m.bias, 0)
         # m.weight.data.normal_(1.0, 0.02)

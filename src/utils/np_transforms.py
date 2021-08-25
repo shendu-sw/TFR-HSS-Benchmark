@@ -33,7 +33,6 @@ class ToTensor:
 
 
 class Resize:
-
     def __init__(self, size):
         self.size = size
 
@@ -43,7 +42,7 @@ class Resize:
         for _ in range(4 - x_dim):
             x_tensor = x_tensor.unsqueeze(0)
         x_resize = interpolate(x_tensor, size=self.size)
-        for _ in range(4-x_dim):
+        for _ in range(4 - x_dim):
             x_resize = x_resize.squeeze(0)
         return x_resize.numpy()
 

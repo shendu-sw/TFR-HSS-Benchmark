@@ -28,33 +28,35 @@ class LoadResponse(VisionDataset):
         target_transform=None,
         is_valid_file=None,
     ):
-        super().__init__(
-            root, transform=transform, target_transform=target_transform
-        )
+        super().__init__(root, transform=transform, target_transform=target_transform)
         self.list_path = list_path
         self.loader = loader
         self.load_name = load_name
         self.resp_name = resp_name
         self.layout_name = layout_name
         self.extensions = extensions
-        self.sample_files = make_dataset_list(root, list_path, extensions, is_valid_file)
+        self.sample_files = make_dataset_list(
+            root, list_path, extensions, is_valid_file
+        )
 
     def __getitem__(self, index):
         path = self.sample_files[index]
         load, resp, _ = self.loader(path, self.load_name, self.resp_name)
 
-        load[np.where(load<TOL)] = 298
+        load[np.where(load < TOL)] = 298
 
         if self.transform is not None:
             load = self.transform(load)
         if self.target_transform is not None:
             resp = self.target_transform(resp)
-        
+
         return load, resp
 
     def _layout(self):
         path = self.sample_files[0]
-        _, _, layout = self.loader(path, self.load_name, self.resp_name, self.layout_name)
+        _, _, layout = self.loader(
+            path, self.load_name, self.resp_name, self.layout_name
+        )
         return layout
 
     def __len__(self):
@@ -75,21 +77,23 @@ class LoadPointResponse(VisionDataset):
         extensions=None,
         is_valid_file=None,
     ):
-        super().__init__(
-            root
-        )
+        super().__init__(root)
         self.list_path = list_path
         self.loader = loader
         self.load_name = load_name
         self.resp_name = resp_name
         self.layout_name = layout_name
         self.extensions = extensions
-        self.sample_files = make_dataset_list(root, list_path, extensions, is_valid_file)
+        self.sample_files = make_dataset_list(
+            root, list_path, extensions, is_valid_file
+        )
 
     def __getitem__(self, index):
         path = self.sample_files[index]
-        load, resp, layout = self.loader(path, self.load_name, self.resp_name, self.layout_name)
-        
+        load, resp, layout = self.loader(
+            path, self.load_name, self.resp_name, self.layout_name
+        )
+
         return load, resp, layout
 
     def __len__(self):
@@ -98,14 +102,14 @@ class LoadPointResponse(VisionDataset):
 
 class LoadVecResponse(VisionDataset):
     def __init__(
-        self, 
+        self,
         root,
         loader,
         list_path,
         load_name="u_obs",
         resp_name="u",
         layout_name="F",
-        div_num = 4,
+        div_num=4,
         extensions=None,
         transform=None,
         target_transform=None,
@@ -121,13 +125,15 @@ class LoadVecResponse(VisionDataset):
         self.resp_name = resp_name
         self.layout_name = layout_name
         self.div_num = div_num
-        self.sample_files = make_dataset_list(root, list_path, extensions, is_valid_file)
+        self.sample_files = make_dataset_list(
+            root, list_path, extensions, is_valid_file
+        )
 
     def __getitem__(self, index):
 
         path = self.sample_files[index]
         x_context, y_context, x_target, y_target, resp = self._loader(path)
-        
+
         if self.transform is not None:
             y_context = (y_context - self.transform[0]) / self.transform[1]
         else:
@@ -135,11 +141,17 @@ class LoadVecResponse(VisionDataset):
 
         if self.target_transform is not None:
             y_target = (y_target - self.target_transform[0]) / self.transform[1]
-            resp = (resp-self.target_transform[0]) / self.transform[1]
+            resp = (resp - self.target_transform[0]) / self.transform[1]
         else:
             pass
-               
-        return x_context, y_context.type(torch.FloatTensor), x_target, y_target.type(torch.FloatTensor), resp.type(torch.FloatTensor)
+
+        return (
+            x_context,
+            y_context.type(torch.FloatTensor),
+            x_target,
+            y_target.type(torch.FloatTensor),
+            resp.type(torch.FloatTensor),
+        )
 
     def __len__(self):
         return len(self.sample_files)
@@ -149,22 +161,34 @@ class LoadVecResponse(VisionDataset):
         load, resp, _ = self.loader(path, self.load_name, self.resp_name)
 
         monitor_x, monitor_y = np.where(load > TOL)
-        y_context = torch.from_numpy(load[monitor_x, monitor_y].reshape(1,-1)).float()
+        y_context = torch.from_numpy(load[monitor_x, monitor_y].reshape(1, -1)).float()
 
         monitor_x, monitor_y = monitor_x / load.shape[0], monitor_y / load.shape[1]
-        x_context = torch.from_numpy(np.concatenate([monitor_x.reshape(-1,1),monitor_y.reshape(-1,1)], axis=1)).float()
-        
-        x = np.linspace(0, load.shape[0]-1, load.shape[0]).astype(int)
-        y = np.linspace(1, load.shape[1]-1, load.shape[1]).astype(int)
+        x_context = torch.from_numpy(
+            np.concatenate([monitor_x.reshape(-1, 1), monitor_y.reshape(-1, 1)], axis=1)
+        ).float()
+
+        x = np.linspace(0, load.shape[0] - 1, load.shape[0]).astype(int)
+        y = np.linspace(1, load.shape[1] - 1, load.shape[1]).astype(int)
 
         x_target = None
         y_target = None
         for i in range(self.div_num):
             for j in range(self.div_num):
-                x1, y1 = x[0+i:np.size(x):self.div_num], y[0+j:np.size(y):self.div_num]
+                x1, y1 = (
+                    x[0 + i : np.size(x) : self.div_num],
+                    y[0 + j : np.size(y) : self.div_num],
+                )
                 x1, y1 = np.meshgrid(x1, y1)
-                x_target0 = torch.from_numpy(np.concatenate([x1.reshape(-1, 1), y1.reshape(-1, 1)], axis=1) / np.max(load.shape)).float().unsqueeze(0)
-                y_target0 = torch.from_numpy(resp[x1, y1].reshape(1,-1)).unsqueeze(0)
+                x_target0 = (
+                    torch.from_numpy(
+                        np.concatenate([x1.reshape(-1, 1), y1.reshape(-1, 1)], axis=1)
+                        / np.max(load.shape)
+                    )
+                    .float()
+                    .unsqueeze(0)
+                )
+                y_target0 = torch.from_numpy(resp[x1, y1].reshape(1, -1)).unsqueeze(0)
                 if x_target is not None:
                     x_target = torch.cat((x_target, x_target0), 0)
                 else:
@@ -179,7 +203,9 @@ class LoadVecResponse(VisionDataset):
 
     def _layout(self):
         path = self.sample_files[0]
-        _, _, layout = self.loader(path, self.load_name, self.resp_name, self.layout_name)
+        _, _, layout = self.loader(
+            path, self.load_name, self.resp_name, self.layout_name
+        )
         return layout
 
     def _inputdim(self):
@@ -188,9 +214,9 @@ class LoadVecResponse(VisionDataset):
         monitor_x, _ = np.where(load > TOL)
         return np.size(monitor_x)
 
+
 def make_dataset(root_dir, extensions=None, is_valid_file=None):
-    """make_dataset() from torchvision.
-    """
+    """make_dataset() from torchvision."""
     files = []
     root_dir = os.path.expanduser(root_dir)
     if not ((extensions is None) ^ (is_valid_file is None)):
@@ -211,8 +237,7 @@ def make_dataset(root_dir, extensions=None, is_valid_file=None):
 
 
 def make_dataset_list(root_dir, list_path, extensions=None, is_valid_file=None):
-    """make_dataset() from torchvision.
-    """
+    """make_dataset() from torchvision."""
     files = []
     root_dir = os.path.expanduser(root_dir)
     if not ((extensions is None) ^ (is_valid_file is None)):
@@ -224,7 +249,7 @@ def make_dataset_list(root_dir, list_path, extensions=None, is_valid_file=None):
         is_valid_file = lambda x: has_allowed_extension(x, extensions)
 
     assert os.path.isdir(root_dir), root_dir
-    with open(list_path, 'r') as rf:
+    with open(list_path, "r") as rf:
         for line in rf.readlines():
             data_path = line.strip()
             path = os.path.join(root_dir, data_path)
@@ -247,9 +272,9 @@ def mat_loader(path, load_name, resp_name=None, layout_name=None):
 
 if __name__ == "__main__":
     total_num = 50000
-    with open('train'+str(total_num)+'.txt', 'w') as wf:
-        for idx in range(int(total_num*0.8)):
-            wf.write('Example'+str(idx)+'.mat'+'\n')
-    with open('val'+str(total_num)+'.txt', 'w') as wf:
-        for idx in range(int(total_num*0.8), total_num):
-            wf.write('Example'+str(idx)+'.mat'+'\n')
+    with open("train" + str(total_num) + ".txt", "w") as wf:
+        for idx in range(int(total_num * 0.8)):
+            wf.write("Example" + str(idx) + ".mat" + "\n")
+    with open("val" + str(total_num) + ".txt", "w") as wf:
+        for idx in range(int(total_num * 0.8), total_num):
+            wf.write("Example" + str(idx) + ".mat" + "\n")

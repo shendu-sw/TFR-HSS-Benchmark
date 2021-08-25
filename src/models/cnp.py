@@ -69,7 +69,13 @@ class DeterministicDecoder(nn.Module):
 
 
 class ConditionalNeuralProcess(nn.Module):
-    def __init__(self, input_dim=None, output_dim=None, encoder_sizes=[2+1, 128, 128, 128, 256], decoder_sizes=[256+2, 256, 256, 128, 128, 2]):
+    def __init__(
+        self,
+        input_dim=None,
+        output_dim=None,
+        encoder_sizes=[2 + 1, 128, 128, 128, 256],
+        decoder_sizes=[256 + 2, 256, 256, 128, 128, 2],
+    ):
         super(ConditionalNeuralProcess, self).__init__()
         self._encoder = DeterministicEncoder(encoder_sizes)
         self._decoder = DeterministicDecoder(decoder_sizes)
@@ -79,15 +85,15 @@ class ConditionalNeuralProcess(nn.Module):
         dist, mu, sigma = self._decoder(representation, x_target)
 
         log_p = None if y_target is None else dist.log_prob(y_target)
-        #return log_p, mu, sigma
+        # return log_p, mu, sigma
         return mu
-        
+
 
 def input_mapping(x, B):
     if B is None:
         return x
     else:
-        x_proj = (2. * np.pi * x) @ B.t()
+        x_proj = (2.0 * np.pi * x) @ B.t()
         return torch.cat([torch.sin(x_proj), torch.cos(x_proj)], dim=-1)
 
 

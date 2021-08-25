@@ -3,7 +3,7 @@ import numpy as np
 import random
 import os
 
-print('Using', vtk.vtkVersion.GetVTKSourceVersion())
+print("Using", vtk.vtkVersion.GetVTKSourceVersion())
 
 
 class MyInteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
@@ -14,7 +14,7 @@ class MyInteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
 
     def keyPressEvent(self, obj, event):
         key = self.parent.GetKeySym()
-        if key == '+':
+        if key == "+":
             point_size = self.pointcloud.vtkActor.GetProperty().GetPointSize()
             self.pointcloud.vtkActor.GetProperty().SetPointSize(point_size + 1)
             print(str(point_size) + " " + key)
@@ -22,7 +22,6 @@ class MyInteractorStyle(vtk.vtkInteractorStyleTrackballCamera):
 
 
 class VtkPointCloud:
-
     def __init__(self, point_size=18, maxNumPoints=1e8):
         self.maxNumPoints = maxNumPoints
         self.vtkPolyData = vtk.vtkPolyData()
@@ -59,11 +58,11 @@ class VtkPointCloud:
         self.vtkPoints = vtk.vtkPoints()
         self.vtkCells = vtk.vtkCellArray()
         self.vtkDepth = vtk.vtkDoubleArray()
-        self.vtkDepth.SetName('DepthArray')
+        self.vtkDepth.SetName("DepthArray")
         self.vtkPolyData.SetPoints(self.vtkPoints)
         self.vtkPolyData.SetVerts(self.vtkCells)
         self.vtkPolyData.GetPointData().SetScalars(self.vtkDepth)
-        self.vtkPolyData.GetPointData().SetActiveScalars('DepthArray')
+        self.vtkPolyData.GetPointData().SetActiveScalars("DepthArray")
 
 
 def getActorCircle(radius_inner=100, radius_outer=99, color=(1, 0, 0)):
@@ -95,7 +94,15 @@ def getActorCircle(radius_inner=100, radius_outer=99, color=(1, 0, 0)):
     return actor
 
 
-def show_pointclouds(points, colors, text=[], title="Default", png_path="", interactive=True, orientation='horizontal'):
+def show_pointclouds(
+    points,
+    colors,
+    text=[],
+    title="Default",
+    png_path="",
+    interactive=True,
+    orientation="horizontal",
+):
     """
     Show multiple point clouds specified as lists. First clouds at the bottom.
     :param points: list of pointclouds, item: numpy (N x 3) XYZ
@@ -108,16 +115,18 @@ def show_pointclouds(points, colors, text=[], title="Default", png_path="", inte
     """
 
     # make sure pointclouds is a list
-    assert isinstance(points, type([])), \
-        "Pointclouds argument must be a list"
+    assert isinstance(points, type([])), "Pointclouds argument must be a list"
 
     # make sure colors is a list
-    assert isinstance(colors, type([])), \
-        "Colors argument must be a list"
+    assert isinstance(colors, type([])), "Colors argument must be a list"
 
     # make sure number of pointclouds and colors are the same
-    assert len(points) == len(colors), \
-        "Number of pointclouds (%d) is different then number of colors (%d)" % (len(points), len(colors))
+    assert len(points) == len(
+        colors
+    ), "Number of pointclouds (%d) is different then number of colors (%d)" % (
+        len(points),
+        len(colors),
+    )
 
     while len(text) < len(points):
         text.append("")
@@ -130,15 +139,20 @@ def show_pointclouds(points, colors, text=[], title="Default", png_path="", inte
     renderers = [vtk.vtkRenderer() for _ in range(num_pointclouds)]
 
     height = 1.0 / max(num_pointclouds, 1)
-    viewports = [(i*height, (i+1)*height) for i in range(num_pointclouds)]
-    #print(viewports)
+    viewports = [(i * height, (i + 1) * height) for i in range(num_pointclouds)]
+    # print(viewports)
 
     # iterate over all point clouds
     for i, pc in enumerate(points):
         pc = pc.squeeze()
         co = colors[i].squeeze()
-        assert pc.shape[0] == co.shape[0], \
-            "expected same number of points (%d) then colors (%d), cloud index = %d" % (pc.shape[0], co.shape[0], i)
+        assert (
+            pc.shape[0] == co.shape[0]
+        ), "expected same number of points (%d) then colors (%d), cloud index = %d" % (
+            pc.shape[0],
+            co.shape[0],
+            i,
+        )
         assert pc.shape[1] == 3, "expected points to be N x 3, got N x %d" % pc.shape[1]
         assert co.shape[1] == 3, "expected colors to be N x 3, got N x %d" % co.shape[1]
 
@@ -151,13 +165,13 @@ def show_pointclouds(points, colors, text=[], title="Default", png_path="", inte
         renderers[i].AddActor(pointclouds[i].vtkActor)
         # renderers[i].AddActor(vtk.vtkAxesActor())
         renderers[i].SetBackground(1.0, 1.0, 1.0)
-        if orientation == 'horizontal':
+        if orientation == "horizontal":
             print(viewports[i][0])
             renderers[i].SetViewport(viewports[i][0], 0.0, viewports[i][1], 1.0)
-        elif orientation == 'vertical':
+        elif orientation == "vertical":
             renderers[i].SetViewport(0.0, viewports[i][0], 1.0, viewports[i][1])
         else:
-            raise Exception('Not a valid orientation!')
+            raise Exception("Not a valid orientation!")
         renderers[i].ResetCamera()
 
     # Add circle to first render
@@ -167,12 +181,12 @@ def show_pointclouds(points, colors, text=[], title="Default", png_path="", inte
     # Text actors
     text_actors = [vtk.vtkTextActor() for _ in text]
     for i, ta in enumerate(text_actors):
-        if orientation == 'horizontal':
-            ta.SetInput('                ' + text[i])
-        elif orientation == 'vertical':
-            ta.SetInput(text[i] + '\n\n\n\n\n\n')
+        if orientation == "horizontal":
+            ta.SetInput("                " + text[i])
+        elif orientation == "vertical":
+            ta.SetInput(text[i] + "\n\n\n\n\n\n")
         else:
-            raise Exception('Not a valid orientation!')
+            raise Exception("Not a valid orientation!")
         txtprop = ta.GetTextProperty()
         txtprop.SetFontFamilyToArial()
         txtprop.SetFontSize(0)
@@ -201,14 +215,14 @@ def show_pointclouds(points, colors, text=[], title="Default", png_path="", inte
     # camera.SetFocalPoint(0, 0, 0)
 
     camera.SetViewUp(0, 0, 1)
-    if orientation == 'horizontal':
+    if orientation == "horizontal":
         camera.SetPosition(3, -10, 2)
         camera.SetFocalPoint(3, 1.5, 1.5)
-    elif orientation == 'vertical':
+    elif orientation == "vertical":
         camera.SetPosition(1.5, -6, 2)
         camera.SetFocalPoint(1.5, 1.5, 1.5)
     else:
-        raise Exception('Not a valid orientation!')
+        raise Exception("Not a valid orientation!")
 
     camera.SetClippingRange(0.002, 1000)
     for renderer in renderers:
@@ -217,12 +231,12 @@ def show_pointclouds(points, colors, text=[], title="Default", png_path="", inte
     # Begin Interaction
     render_window.Render()
     render_window.SetWindowName(title)
-    if orientation == 'horizontal':
+    if orientation == "horizontal":
         render_window.SetSize(1940, 720)
-    elif orientation == 'vertical':
+    elif orientation == "vertical":
         render_window.SetSize(600, 1388)
     else:
-        raise Exception('Not a valid orientation!')
+        raise Exception("Not a valid orientation!")
 
     if interactive:
         render_window_interactor.Start()
@@ -253,10 +267,20 @@ def get_points_colors_from_obj(filename, limit=1):
     return points[idx, :], colors[idx, :]
 
 
-def visualize_part_seg(file_name_pred, file_name_gt, comparison_folder_list, limit=1, text=[], png_path="",
-                          interactive=True, orientation='horizontal'):
+def visualize_part_seg(
+    file_name_pred,
+    file_name_gt,
+    comparison_folder_list,
+    limit=1,
+    text=[],
+    png_path="",
+    interactive=True,
+    orientation="horizontal",
+):
     # load base point cloud
-    gt_points, gt_colors = get_points_colors_from_obj(os.path.join(comparison_folder_list[0], file_name_gt), limit)
+    gt_points, gt_colors = get_points_colors_from_obj(
+        os.path.join(comparison_folder_list[0], file_name_gt), limit
+    )
 
     idx_gt = gt_points[:, 1] >= limit
 
@@ -264,12 +288,19 @@ def visualize_part_seg(file_name_pred, file_name_gt, comparison_folder_list, lim
     all_colors = [gt_colors[idx_gt, :3]]
 
     for folder in comparison_folder_list:
-        pts, col = get_points_colors_from_obj(os.path.join(folder, file_name_pred), limit=limit)
+        pts, col = get_points_colors_from_obj(
+            os.path.join(folder, file_name_pred), limit=limit
+        )
 
         all_points.append(pts)
         all_colors.append(col)
 
     print(np.asarray(all_points).shape)
-    show_pointclouds(all_points, all_colors, text=text, png_path=png_path, interactive=interactive,
-                     orientation=orientation)
-
+    show_pointclouds(
+        all_points,
+        all_colors,
+        text=text,
+        png_path=png_path,
+        interactive=interactive,
+        orientation=orientation,
+    )

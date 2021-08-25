@@ -32,8 +32,8 @@ def main(hparams):
     if hparams.gpu == 0:
         hparams.gpu = 0
     else:
-        hparams.gpu = [hparams.gpu-1]
-    #print(hparams.gpus)
+        hparams.gpu = [hparams.gpu - 1]
+    # print(hparams.gpus)
     trainer = pl.Trainer(
         max_epochs=hparams.max_epochs,
         gpus=hparams.gpu,

@@ -16,8 +16,13 @@ class AlexNet(nn.Module):
         super(AlexNet, self).__init__()
         self.features3 = nn.Sequential(
             # kernel(11, 11) -> kernel(7, 7)
-            nn.Conv2d(in_channels=in_channels, out_channels=64,
-                      kernel_size=7, stride=4, padding=3),
+            nn.Conv2d(
+                in_channels=in_channels,
+                out_channels=64,
+                kernel_size=7,
+                stride=4,
+                padding=3,
+            ),
             nn.BatchNorm2d(64) if bn else nn.GroupNorm(32, 64),
             nn.ReLU(inplace=True),
         )
@@ -49,7 +54,7 @@ class AlexNet(nn.Module):
 
 if __name__ == "__main__":
     x = torch.zeros(8, 1, 200, 200)
-    net = Alexnet()
+    net = AlexNet()
     print(net)
     y = net(x)
     print()

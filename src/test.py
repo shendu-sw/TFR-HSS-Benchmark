@@ -33,15 +33,16 @@ def main(hparams):
     if hparams.gpu == 0:
         hparams.gpu = 0
     else:
-        hparams.gpu = [hparams.gpu-1]
+        hparams.gpu = [hparams.gpu - 1]
     trainer = pl.Trainer(
         gpus=hparams.gpu,
         precision=16 if hparams.use_16bit else 32,
         # limit_test_batches=0.05
     )
 
-    model_path = os.path.join(f'lightning_logs/version_' +
-                              hparams.test_check_num, 'checkpoints/')
+    model_path = os.path.join(
+        f"lightning_logs/version_" + hparams.test_check_num, "checkpoints/"
+    )
     model_path = list(Path(model_path).glob("*.ckpt"))[0]
     test_model = model.load_from_checkpoint(checkpoint_path=model_path, hparams=hparams)
 
@@ -52,4 +53,3 @@ def main(hparams):
     print()
 
     trainer.test(model=test_model)
-
