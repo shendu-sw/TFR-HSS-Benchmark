@@ -20,7 +20,7 @@ This project provides the implementation of the paper "TFRD: A Benchmark Dataset
 pip install -r requirements.txt
 ```
 
-2. Install `torch-cluster`, `torch-scatter`, `torch-sparse` package (matching the version of `torch`, `cuda` [[download](https://pytorch-geometric.com/whl/torch-1.5.0.html)])
+2. Install `torch-cluster`, `torch-scatter`, `torch-sparse` package (matching the version of `torch`, `cuda` [[download](https://pytorch-geometric.com/whl)])
 
 ## Running
 > All the methods for TFR-HSS task can be accessed by running `main.py` file.
