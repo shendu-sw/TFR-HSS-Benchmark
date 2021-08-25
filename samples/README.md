@@ -1,6 +1,8 @@
 # TFRD
 
-> This is the dataset for temperature field reconstruction of heat source systems task (TFR-HSS).
+> This is samples from TFRD dataset for temperature field reconstruction of heat source systems task (TFR-HSS).
+>
+> download site: https://pan.baidu.com/s/14BipTer1fkilbRjrQNbKiQ, password: `tfrd`
 >
 > author: Zhiqiang Gong
 >
