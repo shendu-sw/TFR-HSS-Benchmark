@@ -90,7 +90,7 @@ pip install -r requirements.txt
   ```
 
 
-* Testing with reconstruction visualization
+* Testing with prediction visualization
 
   ```
   python main.py --plot
