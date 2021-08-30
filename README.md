@@ -40,6 +40,8 @@ pip install -r requirements.txt
 
 ## Running
 > All the methods for TFR-HSS task can be accessed by running `main.py` file.
+>
+> All the parameters are defined in two forms, namely the `yaml` file (default `config\config.yml`) and `command line` parameters. Priority: `yaml` < `command line` 
 
 ### Image-based and Vector-based methods
 
