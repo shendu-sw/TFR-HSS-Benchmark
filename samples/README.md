@@ -123,7 +123,7 @@ If this dataset is helpful for your research, please  consider citing:
 ```
 @article{gong2021,
     Author = {Xiaoqian Chen and Zhiqiang Gong and Xiaoyu Zhao and Weien Zhou and Wen Yao},
-    Title = {TFRD: A Benchmark Dataset for Research on Temperature Field Reconstruction of Heat-Source Systems},
+    Title = {A Machine Learning Modelling Benchmark for Temperature Field Reconstruction of Heat-Source Systems},
     Journal = {arXiv preprint arXiv:2108.08298},
     Year = {2021}
 }
