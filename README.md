@@ -153,7 +153,7 @@ One tiny example for training and testing can be accessed based on the following
 If you find this work helpful for your research, please consider citing:
 
 ```
-@article{gong2021,
+@article{gong2022,
     Author = {Xiaoqian Chen and Zhiqiang Gong and Xiaoyu Zhao and Weien Zhou and Wen Yao},
     Title = {A Machine Learning Modelling Benchmark for Temperature Field Reconstruction of Heat-Source Systems},
     Journal = {Science China Information Sciences},
